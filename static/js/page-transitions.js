@@ -113,6 +113,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Parse the HTML
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
+
+                // Ensure assets/scripts from new page are present
+                const externalScriptsReady = loadExternalScripts(doc);
+                syncHeadResources(doc);
  
                 // Update the title
                 document.title = doc.title;
@@ -120,6 +124,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Update the page content
                 const newContent = doc.body;
                 if (newContent && pageContainer) {
+                    // Sync body classes with the new page (scopes page-specific CSS)
+                    document.body.className = doc.body.className || '';
+
                     // Replace content
                     pageContainer.innerHTML = newContent.innerHTML;
                     ensureOverlay();
@@ -148,14 +155,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
  
                     // Trigger enter animation after a small delay
-                    setTimeout(() => {
-                        pageContainer.classList.add('page-enter-active');
-                        hideLoading();
+                    externalScriptsReady.finally(() => {
+                        setTimeout(() => {
+                            pageContainer.classList.add('page-enter-active');
+                            hideLoading();
 
-                        // Run page-specific initialization functions
-                        initPageSpecificFunctions();
-                        updateActiveNav();
-                    }, 10);
+                            // Run page-specific initialization functions
+                            initPageSpecificFunctions();
+                            updateActiveNav();
+                        }, 10);
+                    });
                 } else {
                     // Fallback if we can't find the content container
                     window.location.href = url;
@@ -267,7 +276,10 @@ function initPageSpecificFunctions() {
             getExpressVPNStatus();
         }
     }
- 
+
+    // Initialize custom proxy toggle visibility on settings page
+    initProxyToggle();
+
     // Initialize test proxy button if on settings page
     const testProxyBtn = document.getElementById('testProxyBtn');
     if (testProxyBtn) {
@@ -328,6 +340,14 @@ function initPageSpecificFunctions() {
     // Re-initialize dark mode toggle
     const darkModeToggle = document.getElementById('darkMode');
     if (darkModeToggle) {
+        // Sync checkbox with stored preference and apply theme immediately
+        const stored = localStorage.getItem('darkMode');
+        const isDark = stored === null ? true : stored === 'true';
+        darkModeToggle.checked = isDark;
+        if (typeof applyDarkMode === 'function') {
+            applyDarkMode(isDark);
+        }
+
         darkModeToggle.addEventListener('change', function () {
             const isDarkMode = this.checked;
             localStorage.setItem('darkMode', isDarkMode);
@@ -338,7 +358,7 @@ function initPageSpecificFunctions() {
     }
  }
  
- function reinitializeScripts() {
+function reinitializeScripts() {
     // Reinitialize any scripts that were bound to the previous DOM elements
  
     // Re-bind any click handlers on specific elements
@@ -395,6 +415,49 @@ function initPageSpecificFunctions() {
     initPageSpecificFunctions();
 }
 
+// Copy stylesheets and inline styles from the loaded document into current head (avoids missing page-specific CSS)
+function syncHeadResources(doc) {
+    const currentHead = document.head;
+    const newHead = doc.head;
+
+    // Stylesheets
+    newHead.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+        const href = link.getAttribute('href');
+        if (!href) return;
+        const exists = currentHead.querySelector(`link[rel="stylesheet"][href="${href}"]`);
+        if (!exists) currentHead.appendChild(link.cloneNode(true));
+    });
+
+    // Inline styles (avoid duplicates by content)
+    newHead.querySelectorAll('style').forEach(style => {
+        const content = style.textContent.trim();
+        if (!content) return;
+        const exists = Array.from(currentHead.querySelectorAll('style')).some(s => s.textContent.trim() === content);
+        if (!exists) currentHead.appendChild(style.cloneNode(true));
+    });
+}
+
+// Ensure external scripts from the new page are available after SPA navigation
+function loadExternalScripts(doc) {
+    const currentScripts = new Set(Array.from(document.querySelectorAll('script[src]')).map(s => s.src));
+    const toLoad = Array.from(doc.querySelectorAll('script[src]')).filter(script => {
+        const src = script.src;
+        return src && !currentScripts.has(src);
+    });
+
+    if (toLoad.length === 0) return Promise.resolve();
+
+    const loadPromises = toLoad.map(script => new Promise((resolve, reject) => {
+        const clone = document.createElement('script');
+        Array.from(script.attributes).forEach(attr => clone.setAttribute(attr.name, attr.value));
+        clone.onload = resolve;
+        clone.onerror = reject;
+        document.body.appendChild(clone);
+    }));
+
+    return Promise.allSettled(loadPromises);
+}
+
 function updateActiveNav() {
     const current = window.location.pathname;
     document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
@@ -421,4 +484,19 @@ function updateActiveNav() {
     if (isAdminElement) {
         document.body.setAttribute('data-is-admin', 'true');
     }
- });
+});
+
+// Helper used on settings page for proxy toggle (works on full load and SPA nav)
+function initProxyToggle() {
+    const useProxyCheckbox = document.getElementById('useProxy');
+    const proxyFields = document.getElementById('proxySettingsFields');
+    if (!useProxyCheckbox || !proxyFields) return;
+
+    // Set initial state
+    proxyFields.style.display = useProxyCheckbox.checked ? 'block' : 'none';
+
+    // Bind change listener (idempotent enough for SPA)
+    useProxyCheckbox.addEventListener('change', () => {
+        proxyFields.style.display = useProxyCheckbox.checked ? 'block' : 'none';
+    });
+}

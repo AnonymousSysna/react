@@ -10,14 +10,19 @@ const state = {
     ccnResults: [],
     deadResults: [],
     retryResults: [],
+    deferredRetry: [],
+    processingDeferred: false,
     invalidResults: [],
     abortControllers: [],
     selectedGate: '',
-    selectedAmount: 1,
+    selectedAmount: 10,
     activeProcesses: 0,
-    processedLines: new Set(),
-    maxConcurrent: 1
+    maxConcurrent: 10,
+    baselineCounts: { live: 0, ccn: 0, dead: 0, invalid: 0, retry: 0 }
 };
+
+const GATE_STORAGE_KEY = 'selected_gate';
+const CLEAR_STORAGE_KEY = 'clear_results_selection';
 
 // DOM element cache
 const DOM = {
@@ -42,7 +47,7 @@ const DOM = {
     invalidCount: null,
     retryCount: null,
     gatesDropdown: null,
-    selectedGateText: null,
+    selectedGateLabel: null,
     selectedGateInput: null,
     amountDropdown: null,
     selectedAmountText: null,
@@ -76,7 +81,7 @@ function cacheDOMElements() {
     DOM.invalidCount = document.getElementById('invalidCount');
     DOM.retryCount = document.getElementById('retryCount');
     DOM.gatesDropdown = document.getElementById('gatesDropdown');
-    DOM.selectedGateText = document.getElementById('selectedGate');
+    DOM.selectedGateLabel = document.getElementById('selectedGateLabel');
     DOM.selectedGateInput = document.getElementById('selected_gate');
     DOM.amountDropdown = document.getElementById('amountDropdown');
     DOM.selectedAmountText = document.getElementById('selectedAmount');
@@ -102,6 +107,14 @@ const utils = {
 
     generateResultId() {
         return `result-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    },
+
+    maskLine(line) {
+        const parts = line.split('|');
+        if (parts.length > 4) {
+            return [...parts.slice(0, 4), '.......'].join('|');
+        }
+        return line;
     },
 
     async copyToClipboard(text) {
@@ -147,6 +160,10 @@ const utils = {
             background: '#1e1e1e',
             color: '#f5f6fa'
         });
+    },
+
+    isDeclinedRetry(message = '') {
+        return message.toUpperCase().includes('DECLINED_PLEASE_RETRY');
     },
 
     showAlert(options) {
@@ -216,8 +233,9 @@ const ui = {
     },
 
     updateProgress() {
-        const processedCardsCount = state.liveResults.length + state.ccnResults.length + state.invalidResults.length +
-                                    state.deadResults.length + state.retryResults.length;
+        const runCounts = ui.getRunCounts();
+        const processedCardsCount = runCounts.live + runCounts.ccn + runCounts.invalid +
+                                    runCounts.dead + runCounts.retry;
         const percent = state.linesArray.length > 0 
             ? Math.floor((processedCardsCount / state.linesArray.length) * 100) 
             : 0;
@@ -226,6 +244,15 @@ const ui = {
         DOM.progressBar.textContent = `${percent}%`;
         DOM.progressBar.setAttribute('aria-valuenow', percent);
         DOM.processedCount.textContent = processedCardsCount;
+    },
+
+    refreshCounts() {
+        const runCounts = ui.getRunCounts();
+        DOM.liveCount.textContent = runCounts.live;
+        DOM.ccnCount.textContent = runCounts.ccn;
+        DOM.deadCount.textContent = runCounts.dead;
+        DOM.invalidCount.textContent = runCounts.invalid;
+        DOM.retryCount.textContent = runCounts.retry;
     },
 
     updateList(list, item, countElement, count) {
@@ -237,12 +264,13 @@ const ui = {
         countElement.textContent = count;
     },
 
-    getResultHTML(label, type, line, message, resultId) {
+    getResultHTML(label, type, line, message, resultId, displayLine = null) {
+        const shown = displayLine ?? line;
         return `
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <span class="badge bg-${type} me-2">${label}</span>
-                    <span id="${resultId}">${line}</span>
+                    <span id="${resultId}" data-full-line="${line}">${shown}</span>
                 </div>
                 <div>
                     <button type="button" class="btn btn-sm btn-outline-light copy-btn bi bi-clipboard" 
@@ -270,6 +298,16 @@ const ui = {
         setTimeout(() => {
             btn.innerHTML = originalHTML;
         }, duration);
+    },
+
+    getRunCounts() {
+        return {
+            live: Math.max(0, state.liveResults.length - state.baselineCounts.live),
+            ccn: Math.max(0, state.ccnResults.length - state.baselineCounts.ccn),
+            dead: Math.max(0, state.deadResults.length - state.baselineCounts.dead),
+            invalid: Math.max(0, state.invalidResults.length - state.baselineCounts.invalid),
+            retry: Math.max(0, state.retryResults.length - state.baselineCounts.retry)
+        };
     }
 };
 
@@ -299,7 +337,7 @@ const processor = {
 
         const result = await utils.showAlert({
             title: 'Start Processing?',
-            text: `Process cards using ${DOM.selectedGateText.textContent}?`,
+            text: `Process cards using ${DOM.selectedGateLabel.textContent}?`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Start',
@@ -327,7 +365,19 @@ const processor = {
         DOM.processedCount.textContent = '0';
         DOM.totalCount.textContent = state.linesArray.length;
 
-        state.processedLines.clear();
+        // capture baselines so progress is per-run while keeping previous results
+        state.baselineCounts = {
+            live: state.liveResults.length,
+            ccn: state.ccnResults.length,
+            dead: state.deadResults.length,
+            invalid: state.invalidResults.length,
+            retry: state.retryResults.length
+        };
+        state.deferredRetry = [];
+        state.processingDeferred = false;
+
+        // reset visible counters for a fresh run without clearing existing content
+        ui.refreshCounts();
         ui.updateProgress();
 
         state.maxConcurrent = state.selectedAmount;
@@ -341,18 +391,13 @@ const processor = {
 
         while (state.activeProcesses < state.maxConcurrent && state.currentIndex < state.linesArray.length) {
             const line = state.linesArray[state.currentIndex];
-
-            if (!state.processedLines.has(line)) {
-                this.processCard(line);
-                state.processedLines.add(line);
-                state.activeProcesses++;
-            }
-
+            this.processCard(line);
+            state.activeProcesses++;
             state.currentIndex++;
         }
 
         if (state.activeProcesses === 0 && state.currentIndex >= state.linesArray.length) {
-            this.complete();
+            this.handleCompletion();
         }
     },
 
@@ -361,9 +406,15 @@ const processor = {
 
         try {
             const data = await api.processLine(line, state.selectedGate, testMode);
-            this.addResult(data);
-            this.removeProcessedLine(line);
-            ui.updateProgress();
+            if (utils.isDeclinedRetry(data?.message)) {
+                state.deferredRetry.push({ line, testMode });
+                this.removeProcessedLine(line);
+                ui.updateProgress();
+            } else {
+                this.addResult(data);
+                this.removeProcessedLine(line);
+                ui.updateProgress();
+            }
         } catch (error) {
             if (error.name !== 'AbortError') {
                 console.error('Error:', error);
@@ -440,8 +491,11 @@ const processor = {
         
         ui.updateLastCheck(`${status}_card`);
         config.results.push(data);
-        listItem.innerHTML = ui.getResultHTML(config.label, config.type, line, message, resultId);
-        ui.updateList(config.list, listItem, config.count, config.results.length);
+        const runCounts = ui.getRunCounts();
+        const displayCount = runCounts[status] ?? Math.max(0, config.results.length - (state.baselineCounts[status] ?? 0));
+        const masked = utils.maskLine(line);
+        listItem.innerHTML = ui.getResultHTML(config.label, config.type, line, message, resultId, masked);
+        ui.updateList(config.list, listItem, config.count, displayCount);
         
         if (config.toast) {
             utils.showToast(config.toast, 'success');
@@ -453,11 +507,46 @@ const processor = {
         DOM.startBtn.disabled = false;
         DOM.stopBtn.disabled = true;
         DOM.processStatus.textContent = 'Stopped';
-        state.processedLines.clear();
-
         state.abortControllers.forEach(controller => controller.abort());
         state.abortControllers = [];
         state.activeProcesses = 0;
+        state.deferredRetry = [];
+        state.processingDeferred = false;
+    },
+
+    async handleCompletion() {
+        if (state.processingDeferred) return;
+
+        if (state.deferredRetry.length > 0) {
+            state.processingDeferred = true;
+            DOM.processStatus.textContent = 'Rechecking deferred cards...';
+            await this.processDeferredQueue();
+            state.processingDeferred = false;
+        }
+
+        this.complete();
+    },
+
+    async processDeferredQueue() {
+        for (const item of [...state.deferredRetry]) {
+            try {
+                const data = await api.processLine(item.line, state.selectedGate, item.testMode);
+
+                if (utils.isDeclinedRetry(data?.message)) {
+                    this.addResult({ ...data, status: 'retry', message: data.message || 'Retry later' });
+                } else {
+                    this.addResult(data);
+                }
+
+                this.removeProcessedLine(item.line);
+                ui.updateProgress();
+            } catch (error) {
+                console.error('Deferred retry failed:', error);
+                this.addResult({ line: item.line, status: 'retry', message: 'retry later' });
+            }
+        }
+
+        state.deferredRetry.length = 0;
     },
 
     complete() {
@@ -467,8 +556,8 @@ const processor = {
         DOM.processStatus.textContent = 'Completed';
         ui.updateProgress();
 
-        const total = state.liveResults.length + state.ccnResults.length + state.invalidResults.length + 
-                     state.deadResults.length + state.retryResults.length;
+        const runCounts = ui.getRunCounts();
+        const total = runCounts.live + runCounts.ccn + runCounts.invalid + runCounts.dead + runCounts.retry;
 
         utils.showAlert({
             icon: 'success',
@@ -482,6 +571,22 @@ const processor = {
 
 // Results management
 const results = {
+    resetAll() {
+        const resetConfig = {
+            live: { results: state.liveResults, count: DOM.liveCount, list: DOM.liveList, label: 'live' },
+            ccn: { results: state.ccnResults, count: DOM.ccnCount, list: DOM.ccnList, label: 'CCN' },
+            dead: { results: state.deadResults, count: DOM.deadCount, list: DOM.deadList, label: 'dead' },
+            invalid: { results: state.invalidResults, count: DOM.invalidCount, list: DOM.invalidList, label: 'invalid' },
+            retry: { results: state.retryResults, count: DOM.retryCount, list: DOM.retryList, label: 'retry' }
+        };
+
+        Object.values(resetConfig).forEach(cfg => {
+            cfg.results.length = 0;
+            cfg.count.textContent = '0';
+            cfg.list.innerHTML = `<div class="text-center text-muted py-5">No ${cfg.label} results yet</div>`;
+        });
+    },
+
     clear(options) {
         const clearConfig = {
             live: { results: state.liveResults, count: DOM.liveCount, list: DOM.liveList },
@@ -556,19 +661,20 @@ const results = {
                 invalidCount: state.invalidResults.length,
                 retryCount: state.retryResults.length,
                 exportDate: new Date().toISOString(),
-                gate: DOM.selectedGateText.textContent
+                gate: DOM.selectedGateLabel.textContent
             }
         };
 
         const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
-
-        const newTab = window.open(url, '_blank');
-        if (!newTab) {
-            console.warn('Popup blocked. User must allow popups.');
-        }
-
-        setTimeout(() => URL.revokeObjectURL(url), 5000);
+        const a = document.createElement('a');
+        const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+        a.href = url;
+        a.download = `results-${stamp}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
     }
 };
 
@@ -637,7 +743,8 @@ const handlers = {
         const el = document.getElementById(elemId);
         if (!el) return;
 
-        const success = await utils.copyToClipboard(el.innerText);
+        const textToCopy = el.dataset.fullLine || el.innerText;
+        const success = await utils.copyToClipboard(textToCopy);
         ui.showCopyFeedback(btn, success);
     },
 
@@ -670,29 +777,30 @@ const handlers = {
             return;
         }
 
+        const savedClearPrefs = handlers.getClearPrefs();
         const result = await utils.showAlert({
             title: 'Clear Results?',
             html: `
                 <div class="text-start">
                     <p>Select which results to clear:</p>
                     <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="clearLive" checked>
+                        <input class="form-check-input" type="checkbox" id="clearLive" ${savedClearPrefs.live ? 'checked' : ''}>
                         <label class="form-check-label" for="clearLive">Live (${state.liveResults.length})</label>
                     </div>
                     <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="clearCcn" checked>
+                        <input class="form-check-input" type="checkbox" id="clearCcn" ${savedClearPrefs.ccn ? 'checked' : ''}>
                         <label class="form-check-label" for="clearCcn">CCN (${state.ccnResults.length})</label>
                     </div>
                     <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="clearDead" checked>
+                        <input class="form-check-input" type="checkbox" id="clearDead" ${savedClearPrefs.dead ? 'checked' : ''}>
                         <label class="form-check-label" for="clearDead">Dead (${state.deadResults.length})</label>
                     </div>
                     <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="clearRetry" checked>
+                        <input class="form-check-input" type="checkbox" id="clearRetry" ${savedClearPrefs.retry ? 'checked' : ''}>
                         <label class="form-check-label" for="clearRetry">Retry (${state.retryResults.length})</label>
                     </div>
                     <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="clearInvalid" checked>
+                        <input class="form-check-input" type="checkbox" id="clearInvalid" ${savedClearPrefs.invalid ? 'checked' : ''}>
                         <label class="form-check-label" for="clearInvalid">Invalid (${state.invalidResults.length})</label>
                     </div>
                 </div>
@@ -712,6 +820,7 @@ const handlers = {
 
         if (result.isConfirmed) {
             results.clear(result.value);
+            handlers.saveClearPrefs(result.value);
         }
     },
 
@@ -738,6 +847,33 @@ const handlers = {
                 }
             });
         }
+    },
+
+    getClearPrefs() {
+        try {
+            const raw = localStorage.getItem(CLEAR_STORAGE_KEY);
+            const parsed = raw ? JSON.parse(raw) : null;
+            if (parsed) {
+                return {
+                    live: !!parsed.live,
+                    ccn: !!parsed.ccn,
+                    dead: !!parsed.dead,
+                    retry: !!parsed.retry,
+                    invalid: !!parsed.invalid
+                };
+            }
+        } catch (e) {
+            console.warn('clear preference load failed', e);
+        }
+        return { live: true, ccn: true, dead: true, retry: true, invalid: true };
+    },
+
+    saveClearPrefs(prefs) {
+        try {
+            localStorage.setItem(CLEAR_STORAGE_KEY, JSON.stringify(prefs));
+        } catch (e) {
+            console.warn('clear preference save failed', e);
+        }
     }
 
 };
@@ -749,6 +885,7 @@ const gates = {
             const data = await api.getAvailableGates();
             DOM.gatesDropdown.innerHTML = '';
             if (data.gates?.length > 0) {
+                const storedGate = this.getStoredGate();
                 data.gates.forEach(gate => {
                     const li = document.createElement('li');
                     const a = document.createElement('a');
@@ -766,7 +903,12 @@ const gates = {
                     DOM.gatesDropdown.appendChild(li);
                 });
 
-                this.select(data.gates[0].id, data.gates[0].name);
+                const matched = storedGate ? data.gates.find(g => g.id === storedGate.id) : null;
+                if (matched) {
+                    this.select(matched.id, matched.name);
+                } else {
+                    this.select(data.gates[0].id, data.gates[0].name);
+                }
             } else {
                 this.showError('No gates available');
                 DOM.startBtn.disabled = true;
@@ -780,14 +922,31 @@ const gates = {
 
     select(gateId, gateName) {
         state.selectedGate = gateId;
-        DOM.selectedGateText.textContent = gateName;
+        DOM.selectedGateLabel.textContent = `Gate: ${gateName}`;
         DOM.selectedGateInput.value = gateId;
         DOM.startBtn.disabled = false;
+        try {
+            localStorage.setItem(GATE_STORAGE_KEY, JSON.stringify({ id: gateId, name: gateName }));
+        } catch (e) {
+            console.warn('Gate persistence failed', e);
+        }
     },
 
     showError(message) {
         DOM.gatesDropdown.innerHTML = `<li><a class="dropdown-item text-danger" href="#">${message}</a></li>`;
-        DOM.selectedGateText.textContent = 'Gate error';
+        DOM.selectedGateLabel.textContent = 'Gate: Error';
+    },
+
+    getStoredGate() {
+        try {
+            const raw = localStorage.getItem(GATE_STORAGE_KEY);
+            if (!raw) return null;
+            const parsed = JSON.parse(raw);
+            if (parsed?.id && parsed?.name) return parsed;
+        } catch (e) {
+            console.warn('Gate load failed', e);
+        }
+        return null;
     }
 
 };
@@ -831,6 +990,12 @@ const amounts = {
         state.selectedAmount = parseInt(amount);
         DOM.selectedAmountText.textContent = `${state.selectedAmount} Card${state.selectedAmount !== 1 ? 's' : ''}`;
         DOM.selectedAmountInput.value = state.selectedAmount;
+        // Persist the user's choice so it survives navigation
+        try {
+            localStorage.setItem('selectedAmount', state.selectedAmount.toString());
+        } catch (e) {
+            console.warn('Amount persistence failed', e);
+        }
     }
 
 };
@@ -839,6 +1004,18 @@ const amounts = {
 // Initialize application
 function init() {
     cacheDOMElements();
+    // Restore the previously selected amount (defaults to the hidden input value / 10)
+    let storedAmount = null;
+    try {
+        storedAmount = localStorage.getItem('selectedAmount');
+    } catch (e) {
+        console.warn('Amount load failed', e);
+    }
+    const initialAmount = storedAmount && !isNaN(parseInt(storedAmount))
+        ? storedAmount
+        : DOM.selectedAmountInput?.value || state.selectedAmount;
+    amounts.select(initialAmount);
+
     // Setup event listeners
     DOM.pasteBtn.addEventListener('click', handlers.handlePaste.bind(handlers));
     DOM.startBtn.addEventListener('click', handlers.handleStartClick);
