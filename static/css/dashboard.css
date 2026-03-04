@@ -128,6 +128,22 @@
     font-weight: 500;
 }
 
+.gate-dropdown-menu {
+    max-height: 280px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    overscroll-behavior: contain;
+    border-radius: 12px;
+}
+
+.gate-dropdown-menu .dropdown-item {
+    white-space: normal;
+    line-height: 1.3;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
 /* Progress bar accent fill */
 .bg-accent {
     background-color: var(--accent-color) !important;
@@ -213,6 +229,88 @@
     grid-template-columns: 1fr;
     gap: 0.5rem;
     align-items: center;
+}
+
+.clear-results-modal {
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+        rgba(15, 23, 42, 0.95);
+    box-shadow: 0 22px 60px rgba(0, 0, 0, 0.45);
+}
+
+.clear-results-modal-header {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.clear-results-subtitle {
+    color: rgba(226, 232, 240, 0.78);
+    font-size: 0.9rem;
+}
+
+.clear-results-quick-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.clear-results-grid {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.clear-option {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 44px;
+    border-radius: 12px;
+    padding: 0.6rem 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.clear-option:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.07);
+    transform: translateY(-1px);
+}
+
+.clear-option.is-selected {
+    border-color: rgba(99, 102, 241, 0.45);
+    background: rgba(99, 102, 241, 0.16);
+}
+
+.clear-option-checkbox {
+    margin-top: 0;
+    flex: 0 0 auto;
+}
+
+.clear-option-dot {
+    font-size: 0.9rem;
+    line-height: 1;
+    opacity: 0.95;
+}
+
+.clear-option-label {
+    font-weight: 500;
+}
+
+.clear-option-count {
+    margin-left: auto;
+    min-width: 2.25rem;
+    text-align: center;
+    font-size: 0.8rem;
+    border-radius: 999px;
+    padding: 0.2rem 0.55rem;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.clear-results-modal-footer {
+    border-top-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Fade-up transition for results tab panes */
@@ -346,6 +444,24 @@ div.compact-layout {
     /* Reduce textarea height on mobile to save scroll space */
     #inputText {
         min-height: 110px;
+    }
+
+    .gate-dropdown-menu {
+        max-height: min(46vh, 320px);
+    }
+
+    .clear-results-modal .modal-body {
+        padding-top: 0.85rem;
+    }
+
+    .clear-results-modal-footer {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.6rem;
+    }
+
+    .clear-results-modal-footer .btn {
+        width: 100%;
     }
 }
 
