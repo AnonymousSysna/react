@@ -1,9 +1,25 @@
 {
+  "_Footer-Cx2Vhr5U.js": {
+    "file": "assets/Footer-Cx2Vhr5U.js",
+    "name": "Footer",
+    "imports": [
+      "index.html"
+    ]
+  },
   "index.html": {
-    "file": "assets/index-2gPSUqA3.js",
+    "file": "assets/index-D3IKmJ9F.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
+    "dynamicImports": [
+      "src/pages/Login.jsx",
+      "src/pages/Dashboard.jsx",
+      "src/pages/Settings.jsx",
+      "src/pages/History.jsx",
+      "src/pages/Statistic.jsx",
+      "src/pages/TooManyAttempts.jsx",
+      "src/pages/NotFound.jsx"
+    ],
     "css": [
       "assets/index-DtJz19j9.css"
     ],
@@ -19,5 +35,72 @@
   "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2": {
     "file": "assets/bootstrap-icons-mSm7cUeB.woff2",
     "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
+  },
+  "src/pages/Dashboard.jsx": {
+    "file": "assets/Dashboard-D69cxfWt.js",
+    "name": "Dashboard",
+    "src": "src/pages/Dashboard.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_Footer-Cx2Vhr5U.js"
+    ]
+  },
+  "src/pages/History.jsx": {
+    "file": "assets/History-pNCpboYT.js",
+    "name": "History",
+    "src": "src/pages/History.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_Footer-Cx2Vhr5U.js"
+    ]
+  },
+  "src/pages/Login.jsx": {
+    "file": "assets/Login-CUImTFgN.js",
+    "name": "Login",
+    "src": "src/pages/Login.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html"
+    ]
+  },
+  "src/pages/NotFound.jsx": {
+    "file": "assets/NotFound-DUR0oWYA.js",
+    "name": "NotFound",
+    "src": "src/pages/NotFound.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html"
+    ]
+  },
+  "src/pages/Settings.jsx": {
+    "file": "assets/Settings-C3kp32MW.js",
+    "name": "Settings",
+    "src": "src/pages/Settings.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_Footer-Cx2Vhr5U.js"
+    ]
+  },
+  "src/pages/Statistic.jsx": {
+    "file": "assets/Statistic-orMnDmEc.js",
+    "name": "Statistic",
+    "src": "src/pages/Statistic.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_Footer-Cx2Vhr5U.js"
+    ]
+  },
+  "src/pages/TooManyAttempts.jsx": {
+    "file": "assets/TooManyAttempts-DO-fGGbt.js",
+    "name": "TooManyAttempts",
+    "src": "src/pages/TooManyAttempts.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html"
+    ]
   }
 }
