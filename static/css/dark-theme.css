@@ -1154,6 +1154,73 @@ pre {
     }
 }
 
+.navbar-compact .profile-dropdown {
+    min-width: 260px;
+    border-radius: 14px;
+    padding: 0.45rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background:
+        linear-gradient(165deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01)),
+        #0f172a;
+    box-shadow: 0 20px 46px rgba(0, 0, 0, 0.45);
+}
+
+.navbar-compact .profile-dropdown-header {
+    padding: 0.3rem 0.45rem 0.5rem;
+}
+
+.navbar-compact .profile-dropdown-meta {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(148, 163, 184, 0.9);
+}
+
+.navbar-compact .profile-dropdown-name {
+    margin-top: 0.2rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    word-break: break-word;
+}
+
+.navbar-compact .profile-dropdown .dropdown-divider {
+    margin: 0.35rem 0;
+    border-color: rgba(148, 163, 184, 0.28);
+}
+
+.navbar-compact .profile-dropdown-item {
+    border-radius: 10px;
+    padding: 0.52rem 0.6rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.navbar-compact .profile-dropdown-item i {
+    width: 1.1rem;
+    text-align: center;
+    opacity: 0.95;
+}
+
+.navbar-compact .profile-dropdown-item:hover,
+.navbar-compact .profile-dropdown-item:focus {
+    transform: translateX(2px);
+}
+
+.navbar-compact .profile-dropdown-item.active {
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.35), rgba(99, 102, 241, 0.18));
+    color: #ffffff;
+}
+
+.navbar-compact .profile-dropdown-logout {
+    color: #fda4af;
+}
+
+.navbar-compact .profile-dropdown-logout:hover,
+.navbar-compact .profile-dropdown-logout:focus {
+    color: #ffffff;
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.38), rgba(239, 68, 68, 0.18));
+}
+
 /* Dropdown — global dark styling */
 .dropdown-menu {
     background-color: #1e293b;

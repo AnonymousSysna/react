@@ -5,6 +5,174 @@
     min-height: 100vh;
 }
 
+.route-scene {
+    position: relative;
+    min-height: 100vh;
+    padding: 0;
+}
+
+.route-scene-content {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+}
+
+.route-fx-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.route-fx-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(148, 163, 184, 0.12);
+    animation: route-fx-fade 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.route-fx-beam {
+    position: absolute;
+    left: -20%;
+    top: 0;
+    width: 35%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.24), transparent);
+    transform: skewX(-14deg);
+    animation: route-fx-beam 480ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.auth-pane {
+    will-change: transform, opacity;
+}
+
+/* Card pop-up transition: rises from backbone (bottom) into final position */
+.route-scene-content .card,
+.route-scene-content .login-card {
+    opacity: 0;
+    transform: translateY(26px) scale(0.985);
+    transform-origin: 50% 100%;
+    animation: route-card-pop 0.52s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    will-change: transform, opacity;
+}
+
+.route-scene-content .card:nth-of-type(1),
+.route-scene-content .login-card:nth-of-type(1) {
+    animation-delay: 0.04s;
+}
+
+.route-scene-content .card:nth-of-type(2),
+.route-scene-content .login-card:nth-of-type(2) {
+    animation-delay: 0.09s;
+}
+
+.route-scene-content .card:nth-of-type(3),
+.route-scene-content .login-card:nth-of-type(3) {
+    animation-delay: 0.14s;
+}
+
+.route-scene-content .card:nth-of-type(4),
+.route-scene-content .login-card:nth-of-type(4) {
+    animation-delay: 0.18s;
+}
+
+.route-scene-backbone {
+    display: none;
+}
+
+.route-scene-backbone::after {
+    content: none;
+}
+
+@keyframes route-backbone-scan {
+    to {
+        transform: translateX(120%);
+    }
+}
+
+@keyframes route-fx-fade {
+    0% {
+        opacity: 0;
+    }
+    25% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes route-fx-beam {
+    0% {
+        transform: translateX(-25%) skewX(-14deg);
+        opacity: 0;
+    }
+    25% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(380%) skewX(-14deg);
+        opacity: 0;
+    }
+}
+
+@keyframes auth-pane-pop {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes route-card-pop {
+    0% {
+        opacity: 0;
+        transform: translateY(26px) scale(0.985);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 768px) {
+    .route-scene {
+        padding: 0;
+    }
+
+    .route-scene-content .card,
+    .route-scene-content .login-card {
+        transform: translateY(18px) scale(0.99);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .route-fx-backdrop,
+    .route-fx-beam {
+        animation: none;
+        opacity: 0;
+    }
+
+    .auth-pane {
+        animation: none !important;
+    }
+
+    .route-scene-backbone::after {
+        animation: none;
+    }
+
+    .route-scene-content .card,
+    .route-scene-content .login-card {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
 /* Page transition animations */
 .page-enter {
     opacity: 0;
