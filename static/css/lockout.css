@@ -1,0 +1,146 @@
+/* ===== Background ===== */
+.lockout-body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.25rem;
+    background-image:
+        radial-gradient(ellipse at 20% 50%, rgba(220, 38, 38, 0.22) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 20%, rgba(239, 68, 68, 0.15) 0%, transparent 40%),
+        radial-gradient(ellipse at 55% 85%, rgba(185, 28, 28, 0.14) 0%, transparent 40%);
+}
+
+/* ===== Card ===== */
+.lockout-card {
+    width: min(500px, 100%);
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(239, 68, 68, 0.1);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.45),
+        0 0 0 1px rgba(239, 68, 68, 0.05) inset;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.lockout-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 20px 48px rgba(0, 0, 0, 0.55),
+        0 0 0 1px rgba(239, 68, 68, 0.12) inset;
+}
+
+/* ===== Header ===== */
+.lockout-header {
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.3), rgba(239, 68, 68, 0.18));
+    border-bottom: 1px solid rgba(239, 68, 68, 0.12);
+    padding: 2rem 1.5rem 1.75rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.lockout-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 60% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 65%);
+    pointer-events: none;
+}
+
+.lockout-header h3 {
+    color: #f1f5f9;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 0;
+}
+
+/* ===== Icon ===== */
+.lockout-icon {
+    font-size: 2.75rem;
+    margin-bottom: 1rem;
+    color: var(--danger-color);
+    position: relative;
+    z-index: 1;
+    display: block;
+    filter: drop-shadow(0 0 12px rgba(239, 68, 68, 0.5));
+}
+
+/* ===== Body inner ===== */
+.lockout-body-inner {
+    padding: 2rem 2rem 2.5rem;
+    text-align: center;
+}
+
+/* ===== Countdown ===== */
+.countdown-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1.5rem 0;
+}
+
+.countdown-circle {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    margin-bottom: 1rem;
+}
+
+.countdown-circle svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.countdown-circle svg circle {
+    fill: none;
+    stroke-width: 7;
+    stroke-linecap: round;
+}
+
+.background-circle {
+    stroke: rgba(255, 255, 255, 0.07);
+}
+
+.progress-circle {
+    stroke: var(--danger-color);
+    filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.5));
+    transition: stroke-dashoffset 1s linear;
+}
+
+.countdown-number {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--danger-color);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 576px) {
+    .lockout-body-inner {
+        padding: 1.5rem 1.25rem 2rem;
+    }
+
+    .lockout-header {
+        padding: 1.5rem 1.25rem;
+    }
+
+    .countdown-circle {
+        width: 110px;
+        height: 110px;
+    }
+
+    .countdown-number {
+        font-size: 1.75rem;
+    }
+}

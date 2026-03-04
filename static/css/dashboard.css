@@ -1,0 +1,378 @@
+/* dashboard.css — page-specific styles for dashboard.html */
+
+.form-check.form-switch {
+    display: flex;
+    align-items: center;
+}
+
+#testModeToggle {
+    margin-right: 8px;
+    background-color: rgba(17, 24, 39, 0.8);
+    border-color: var(--border-color);
+}
+
+#testModeToggle:checked {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.copy-btn {
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.copy-btn:hover {
+    background-color: var(--accent-light);
+}
+
+.card {
+    backdrop-filter: blur(5px);
+}
+
+#inputText {
+    resize: vertical;
+    min-height: 150px;
+}
+
+.list-result {
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    transition: background-color var(--transition-speed) ease,
+                border-color var(--transition-speed) ease;
+}
+
+.list-result:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.skeleton-row {
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton-line {
+    height: 12px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.12);
+    margin-bottom: 8px;
+    position: relative;
+}
+
+.skeleton-line.short {
+    width: 55%;
+    margin-bottom: 0;
+}
+
+.skeleton-row::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: translateX(-100%);
+    animation: skeleton-shimmer 1.1s infinite;
+}
+
+@keyframes skeleton-shimmer {
+    to {
+        transform: translateX(100%);
+    }
+}
+
+.fade-stagger .list-result {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: result-fade-up 0.32s ease forwards;
+    animation-delay: calc(var(--stagger) * 60ms);
+    animation-fill-mode: both;
+    will-change: opacity, transform;
+}
+
+@keyframes result-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fade-stagger .list-result {
+        opacity: 1;
+        transform: none;
+        animation: none;
+    }
+}
+
+.gate-pill-toggle {
+    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    color: var(--text-color);
+    padding: 0.65rem 0.85rem;
+}
+
+.gate-pill-toggle:hover,
+.gate-pill-toggle:focus {
+    color: var(--text-color);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.gate-pill-text {
+    font-weight: 500;
+}
+
+/* Progress bar accent fill */
+.bg-accent {
+    background-color: var(--accent-color) !important;
+}
+
+/* Layout helpers */
+.section-label {
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #a5b4fc;
+}
+
+#section-controls,
+#section-progress,
+#section-results {
+    scroll-margin-top: 90px;
+}
+
+.quick-nav {
+    position: sticky;
+    top: 88px;
+}
+
+.quick-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.04);
+    color: inherit;
+    border: 0;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.quick-link + .quick-link {
+    border-top: 1px solid var(--border-color);
+}
+
+.quick-link.active,
+.quick-link:hover,
+.quick-link:focus-visible {
+    background-color: var(--accent-color);
+    color: #fff;
+}
+
+.back-to-top {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    color: #fff;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    z-index: 1020;
+}
+
+.back-to-top.show {
+    display: inline-flex;
+}
+
+.tab-pane .list-group {
+    max-height: clamp(260px, 48vh, 560px);
+    overflow-y: auto;
+    padding-right: 0.35rem;
+    scrollbar-gutter: stable both-edges;
+}
+
+.tab-pane .list-group.list-virtual {
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+    scrollbar-gutter: auto;
+}
+
+.results-toolbar {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Fade-up transition for results tab panes */
+.tab-pane.fade {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.tab-pane.fade.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Compact layout */
+div.compact-layout {
+    max-width: 1100px;
+}
+
+.compact-card.card {
+    border-radius: 14px;
+    /* Let dropdown menus escape the card bounds so they aren't clipped */
+    overflow: visible;
+}
+
+#section-controls .dropdown {
+    position: relative;
+}
+
+/* Keep gate dropdown above surrounding cards (higher than modal backdrop 1050) */
+#gatesDropdown {
+    z-index: 4000;
+}
+
+/* Elevate the controls card so its dropdown can overlay the results card below */
+#section-controls {
+    position: relative;
+    z-index: 3000;
+}
+
+.compact-card .card-header {
+    padding: 0.8rem 1rem;
+}
+
+.compact-card .card-body {
+    padding: 1rem;
+}
+
+.compact-gap {
+    row-gap: 1rem !important;
+    --bs-gutter-x: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    div.compact-layout {
+        padding-inline: 0.65rem;
+    }
+
+    .quick-nav {
+        position: static;
+        margin-top: 1rem;
+    }
+
+    .quick-nav .list-group {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        overflow-x: auto;
+        padding: 0.75rem;
+        border-radius: 0 0 0.5rem 0.5rem;
+    }
+
+    .quick-nav .quick-link {
+        border: 1px solid var(--border-color);
+        border-radius: 999px;
+        padding: 0.5rem 0.75rem;
+        white-space: nowrap;
+    }
+
+    .quick-nav .quick-link + .quick-link {
+        border-top: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .control-actions {
+        width: 100%;
+        justify-content: flex-start;
+        align-items: stretch;
+        gap: 0.6rem;
+    }
+
+    /* Lay controls in two-per-row grid on small screens for tidy alignment */
+    .control-actions > button {
+        flex: 1 1 calc(50% - 0.6rem);
+        min-width: 140px;
+    }
+
+    /* Amount dropdown spans full row to avoid squishing */
+    .control-actions .btn-group {
+        flex: 1 1 100%;
+        min-width: 220px;
+    }
+
+    /* Test Mode toggle sits on its own row, aligned left */
+    .control-actions .form-check {
+        flex: 1 1 100%;
+        display: flex;
+        align-items: center;
+        padding-inline: 0;
+    }
+
+    .control-actions .form-check-label {
+        margin-left: 0.35rem;
+    }
+
+    .back-to-top {
+        right: 14px;
+        bottom: 14px;
+    }
+
+    /* Comfortable touch targets for the result action buttons only */
+    #copyActiveBtn,
+    #exportResultsBtn,
+    #clearResultsBtn {
+        min-height: 44px;
+        flex: 1 1 auto;
+    }
+
+    /* Reduce textarea height on mobile to save scroll space */
+    #inputText {
+        min-height: 110px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Allow progress stats to wrap on very small screens */
+    #progressStats {
+        flex-wrap: wrap !important;
+        white-space: normal !important;
+        gap: 0.25rem 0.75rem !important;
+        overflow: visible !important;
+    }
+
+    #progressStats > div {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+}
+
+@media (max-width: 360px) {
+    /* Tighten result tabs on very small phones */
+    #resultTabs .nav-link {
+        padding: 0.4rem 0.45rem;
+        font-size: 0.78rem;
+    }
+
+    #resultTabs .badge {
+        font-size: 0.65rem;
+        padding: 0.2em 0.4em;
+    }
+}

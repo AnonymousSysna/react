@@ -1,0 +1,19 @@
+﻿.goey-contentCompact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.goey-contentCompact .goey-header {
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.goey-contentCompact .goey-title {
+  line-height: 1.1;
+}
+
+.goey-contentCompact .goey-timestamp {
+  margin-left: 6px;
+}
