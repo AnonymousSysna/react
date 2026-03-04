@@ -16,6 +16,14 @@
     border-color: var(--accent-color);
 }
 
+.test-mode-wrap {
+    margin-bottom: 0;
+}
+
+.test-mode-label {
+    margin-bottom: 0;
+}
+
 .copy-btn {
     transition: all 0.2s;
     cursor: pointer;
@@ -426,6 +434,26 @@ div.compact-layout {
 
     .control-actions .form-check-label {
         margin-left: 0.35rem;
+    }
+
+    .control-actions .test-mode-wrap {
+        justify-content: space-between;
+        margin-left: 0 !important;
+        padding: 0.5rem 0.7rem;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    .control-actions .test-mode-wrap #testModeToggle {
+        margin-right: 0;
+        margin-left: 0;
+        float: none;
+        flex: 0 0 auto;
+    }
+
+    .control-actions .test-mode-wrap .test-mode-label {
+        margin-left: 0;
     }
 
     .back-to-top {
