@@ -1,0 +1,99 @@
+.history-page .history-filters {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) 180px 180px;
+    gap: 0.5rem;
+}
+
+.history-summary {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(120px, 1fr));
+    gap: 0.5rem;
+}
+
+.history-stat {
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-stat span {
+    color: var(--muted-text-color, #94a3b8);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.history-item {
+    margin-bottom: 0.65rem;
+}
+
+.history-item-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.history-status {
+    border: 1px solid transparent;
+}
+
+.history-status.status-live {
+    color: #22c55e;
+    border-color: rgba(34, 197, 94, 0.4);
+    background: rgba(34, 197, 94, 0.14);
+}
+
+.history-status.status-ccn {
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.4);
+    background: rgba(245, 158, 11, 0.14);
+}
+
+.history-status.status-retry {
+    color: #38bdf8;
+    border-color: rgba(56, 189, 248, 0.4);
+    background: rgba(56, 189, 248, 0.14);
+}
+
+.history-status.status-dead {
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.4);
+    background: rgba(239, 68, 68, 0.14);
+}
+
+.history-status.status-invalid {
+    color: #a1a1aa;
+    border-color: rgba(161, 161, 170, 0.4);
+    background: rgba(161, 161, 170, 0.14);
+}
+
+.history-metrics {
+    margin-top: 0.45rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    font-size: 0.88rem;
+    color: var(--muted-text-color, #94a3b8);
+}
+
+.history-actions {
+    margin-top: 0.65rem;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+@media (max-width: 991.98px) {
+    .history-page .history-filters {
+        grid-template-columns: 1fr;
+    }
+
+    .history-summary {
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+    }
+}

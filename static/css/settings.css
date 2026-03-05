@@ -1,238 +1,96 @@
-/* settings.css — page-specific styles for settings.html */
-
-.settings-page .card-header {
-    background-color: var(--panel-bg);
-    border-bottom: 1px solid var(--border-color);
-    border-top-left-radius: 0.75rem !important;
-    border-top-right-radius: 0.75rem !important;
-    padding: 0.85rem 1.1rem;
+.settings-page .settings-head {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    gap: 0.75rem;
 }
 
-.settings-page .card-body {
-    padding: 1.05rem 1.1rem;
-}
-
-.form-control,
-.form-select {
-    background-color: var(--panel-bg);
-    color: var(--text-color);
-    border-color: var(--border-color);
-    border-radius: 0.5rem;
-    padding: 0.75rem 1rem;
-    transition: all 0.3s ease;
-}
-
-.form-control:focus,
-.form-select:focus {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 0.25rem rgba(139, 92, 246, 0.25);
-    background-color: var(--darker-bg);
-    color: var(--text-color);
-}
-
-.form-control::placeholder {
-    color: var(--text-muted);
-}
-
-.form-select option {
-    background-color: var(--darker-bg);
-    color: var(--text-color);
-    padding: 0.5rem;
-}
-
-.settings-page .btn {
-    position: relative;
-    overflow: hidden;
-    border-radius: 0.5rem;
-    padding: 0.6rem 1.2rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.settings-page .btn-outline-light {
-    border-color: rgba(229, 231, 235, 0.3);
-    color: var(--text-color);
-}
-
-.settings-page .btn-outline-light:hover {
-    background-color: rgba(229, 231, 235, 0.1);
-    color: var(--text-color);
-}
-
-.form-check-input {
-    background-color: var(--panel-bg);
-    border-color: var(--border-color);
-}
-
-.form-check-input:checked {
-    background-color: var(--accent-color);
-    border-color: var(--accent-color);
-}
-
-.badge {
-    padding: 0.5em 0.75em;
-    border-radius: 0.375rem;
-    font-weight: 500;
-}
-
-select {
-    scrollbar-color: var(--accent-color) var(--darker-bg);
-}
-
-select::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-select::-webkit-scrollbar-track {
-    background: var(--darker-bg);
-    border-radius: 4px;
-}
-
-select::-webkit-scrollbar-thumb {
-    background-color: var(--accent-color);
-    border-radius: 4px;
-}
-
-.form-select {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%238B5CF6' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 0.75rem center;
-    background-size: 16px 12px;
-}
-
-#locationsSelect {
-    background-color: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
-    height: auto;
-    min-height: 200px;
-}
-
-#locationsSelect option {
-    padding: 0.5rem 1rem;
-    border-bottom: 1px solid rgba(55, 65, 81, 0.5);
-}
-
-#locationsSelect option:last-child {
-    border-bottom: none;
-}
-
-.form-text {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    margin-top: 0.5rem;
-}
-
-.tab-content {
-    padding: 0.25rem;
-}
-
-.d-flex.justify-content-between {
-    gap: 1rem;
-}
-
-.settings-page .form-check.form-switch {
-    padding: 0.55rem 0.75rem;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    display: inline-flex;
-    align-items: center;
+.settings-tabs {
+    display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
 }
 
-.settings-page .form-check.form-switch .form-check-input {
-    float: none;
-    margin: 0;
-}
-
-.settings-page .card.compact-card {
+.settings-section {
+    border: 1px solid var(--border-color);
     border-radius: 14px;
+    background: rgba(255, 255, 255, 0.03);
 }
 
-.settings-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 0.85rem;
+.settings-section + .settings-section {
+    margin-top: 0.75rem;
 }
 
-/* Responsive */
-@media (max-width: 992px) {
-    .settings-page .card-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
+.settings-section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem 0.95rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
 
-    .settings-page .nav-tabs {
-        overflow-x: auto;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-        scroll-behavior: smooth;
-        touch-action: pan-x;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-        gap: 0.35rem;
-    }
+.settings-badge {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-color);
+}
 
-    .settings-page .nav-tabs::-webkit-scrollbar {
-        display: none;
-    }
+.settings-section-body {
+    padding: 0.95rem;
+}
 
-    .settings-page .nav-tabs .nav-link {
-        margin-bottom: 0;
-        white-space: nowrap;
-    }
+.settings-form .form-control,
+.settings-form .form-select {
+    background-color: var(--panel-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+    border-radius: 10px;
+}
+
+.settings-form .form-control:focus,
+.settings-form .form-select:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.2);
+}
+
+.settings-actions {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.settings-inline-value {
+    margin-top: 0.35rem;
+    font-size: 0.86rem;
+    color: var(--text-muted);
+}
+
+.settings-page .form-check-input {
+    background-color: var(--panel-bg);
+    border-color: var(--border-color);
+}
+
+.settings-page .form-check-input:checked {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
 }
 
 @media (max-width: 768px) {
-    .settings-page .container {
-        padding-inline: 0.75rem;
-    }
-
-    .settings-page .card-body .row > [class*="col-"] {
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
-
-    .settings-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .settings-page .btn {
-        width: 100%;
-        justify-content: center;
-        min-height: 44px;
-    }
-
-    .d-flex.justify-content-between {
+    .settings-page .settings-head {
         flex-direction: column;
         align-items: flex-start;
     }
-}
 
-@media (max-width: 576px) {
-    .settings-page .card {
-        margin-bottom: 1rem;
+    .settings-actions {
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    #locationsSelect {
-        min-height: 160px;
-    }
-
-    /* Larger touch targets for form inputs */
-    .settings-page .form-control,
-    .settings-page .form-select {
-        min-height: 48px;
-    }
-
-    /* Compact tab padding on tiny screens */
-    .settings-page .nav-tabs .nav-link {
-        padding: 0.5rem 0.65rem;
-        font-size: 0.9rem;
+    .settings-actions .btn {
+        width: 100%;
     }
 }

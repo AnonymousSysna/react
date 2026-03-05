@@ -1,13 +1,13 @@
 {
-  "_Footer-D6NoHAOB.js": {
-    "file": "assets/Footer-D6NoHAOB.js",
+  "_Footer-dhwDZkHw.js": {
+    "file": "assets/Footer-dhwDZkHw.js",
     "name": "Footer",
     "imports": [
       "index.html"
     ]
   },
   "index.html": {
-    "file": "assets/index-CwZLFM6p.js",
+    "file": "assets/index-yzA7POd-.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
@@ -21,7 +21,7 @@
       "src/pages/NotFound.jsx"
     ],
     "css": [
-      "assets/index-CpzTppRy.css"
+      "assets/index-n0C0rNPF.css"
     ],
     "assets": [
       "assets/bootstrap-icons-mSm7cUeB.woff2",
@@ -37,27 +37,27 @@
     "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
   },
   "src/pages/Dashboard.jsx": {
-    "file": "assets/Dashboard-BvoLwo-D.js",
+    "file": "assets/Dashboard-CpzntssT.js",
     "name": "Dashboard",
     "src": "src/pages/Dashboard.jsx",
     "isDynamicEntry": true,
     "imports": [
       "index.html",
-      "_Footer-D6NoHAOB.js"
+      "_Footer-dhwDZkHw.js"
     ]
   },
   "src/pages/History.jsx": {
-    "file": "assets/History-DY2pSYKO.js",
+    "file": "assets/History-BMYtxwxB.js",
     "name": "History",
     "src": "src/pages/History.jsx",
     "isDynamicEntry": true,
     "imports": [
       "index.html",
-      "_Footer-D6NoHAOB.js"
+      "_Footer-dhwDZkHw.js"
     ]
   },
   "src/pages/Login.jsx": {
-    "file": "assets/Login-BgqveT4i.js",
+    "file": "assets/Login-CewzNth1.js",
     "name": "Login",
     "src": "src/pages/Login.jsx",
     "isDynamicEntry": true,
@@ -66,7 +66,7 @@
     ]
   },
   "src/pages/NotFound.jsx": {
-    "file": "assets/NotFound-B1lhekgl.js",
+    "file": "assets/NotFound-1M3m-3GN.js",
     "name": "NotFound",
     "src": "src/pages/NotFound.jsx",
     "isDynamicEntry": true,
@@ -75,27 +75,27 @@
     ]
   },
   "src/pages/Settings.jsx": {
-    "file": "assets/Settings-BBKavNJt.js",
+    "file": "assets/Settings-BUdyFpmc.js",
     "name": "Settings",
     "src": "src/pages/Settings.jsx",
     "isDynamicEntry": true,
     "imports": [
       "index.html",
-      "_Footer-D6NoHAOB.js"
+      "_Footer-dhwDZkHw.js"
     ]
   },
   "src/pages/Statistic.jsx": {
-    "file": "assets/Statistic-GBE-iGFb.js",
+    "file": "assets/Statistic-Dp-6PiIh.js",
     "name": "Statistic",
     "src": "src/pages/Statistic.jsx",
     "isDynamicEntry": true,
     "imports": [
       "index.html",
-      "_Footer-D6NoHAOB.js"
+      "_Footer-dhwDZkHw.js"
     ]
   },
   "src/pages/TooManyAttempts.jsx": {
-    "file": "assets/TooManyAttempts-BI3FP0NZ.js",
+    "file": "assets/TooManyAttempts-B5HDW9LZ.js",
     "name": "TooManyAttempts",
     "src": "src/pages/TooManyAttempts.jsx",
     "isDynamicEntry": true,
