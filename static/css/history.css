@@ -43,27 +43,27 @@
 }
 
 .history-status.status-live {
-    color: #22c55e;
-    border-color: rgba(34, 197, 94, 0.4);
-    background: rgba(34, 197, 94, 0.14);
+    color: var(--success-color);
+    border-color: rgba(132, 169, 140, 0.4);
+    background: var(--success-light);
 }
 
 .history-status.status-ccn {
-    color: #f59e0b;
-    border-color: rgba(245, 158, 11, 0.4);
-    background: rgba(245, 158, 11, 0.14);
+    color: var(--warning-color);
+    border-color: rgba(170, 152, 120, 0.4);
+    background: var(--warning-light);
 }
 
 .history-status.status-retry {
-    color: #38bdf8;
-    border-color: rgba(56, 189, 248, 0.4);
-    background: rgba(56, 189, 248, 0.14);
+    color: var(--info-color);
+    border-color: rgba(139, 161, 184, 0.4);
+    background: var(--info-light);
 }
 
 .history-status.status-dead {
-    color: #ef4444;
-    border-color: rgba(239, 68, 68, 0.4);
-    background: rgba(239, 68, 68, 0.14);
+    color: var(--danger-color);
+    border-color: rgba(182, 132, 132, 0.4);
+    background: var(--danger-light);
 }
 
 .history-status.status-invalid {

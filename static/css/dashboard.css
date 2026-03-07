@@ -162,7 +162,7 @@
     letter-spacing: 0.08em;
     font-size: 0.75rem;
     text-transform: uppercase;
-    color: #a5b4fc;
+    color: var(--text-muted);
 }
 
 #section-controls,
@@ -288,8 +288,8 @@
 }
 
 .clear-option.is-selected {
-    border-color: rgba(99, 102, 241, 0.45);
-    background: rgba(99, 102, 241, 0.16);
+    border-color: rgba(123, 135, 152, 0.45);
+    background: rgba(123, 135, 152, 0.16);
 }
 
 .clear-option-checkbox {

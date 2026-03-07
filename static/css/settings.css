@@ -51,7 +51,7 @@
 .settings-form .form-control:focus,
 .settings-form .form-select:focus {
     border-color: var(--accent-color);
-    box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 0 0.2rem var(--accent-light);
 }
 
 .settings-actions {
