@@ -72,6 +72,23 @@
     border-radius: 8px;
     border: 1px solid var(--border-color);
     background: rgba(255, 255, 255, 0.02);
+    overflow-wrap: anywhere;
+}
+
+.stat-copy-btn {
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-copy-btn i,
+.stat-copy-btn .bi {
+    margin-right: 0 !important;
+    line-height: 1;
 }
 
 .stat-row + .stat-row {
@@ -88,5 +105,11 @@
 @media (max-width: 991.98px) {
     .statistic-page .stat-kpis {
         grid-template-columns: repeat(2, minmax(120px, 1fr));
+    }
+}
+
+@media (max-width: 575.98px) {
+    .statistic-page .stat-kpis {
+        grid-template-columns: 1fr;
     }
 }

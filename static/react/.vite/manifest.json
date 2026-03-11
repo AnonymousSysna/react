@@ -1,17 +1,11 @@
 {
-  "_Footer-DGS2moRA.js": {
-    "file": "assets/Footer-DGS2moRA.js",
-    "name": "Footer",
-    "imports": [
-      "index.html"
-    ]
-  },
   "index.html": {
-    "file": "assets/index-DDS60XZ1.js",
+    "file": "assets/index-CFUTALTv.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "dynamicImports": [
+      "src/components/AuthLayout.jsx",
       "src/pages/Login.jsx",
       "src/pages/Dashboard.jsx",
       "src/pages/Settings.jsx",
@@ -21,7 +15,7 @@
       "src/pages/NotFound.jsx"
     ],
     "css": [
-      "assets/index-ls2DvuXP.css"
+      "assets/index--I3KOUbh.css"
     ],
     "assets": [
       "assets/bootstrap-icons-mSm7cUeB.woff2",
@@ -36,37 +30,53 @@
     "file": "assets/bootstrap-icons-mSm7cUeB.woff2",
     "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
   },
-  "src/pages/Dashboard.jsx": {
-    "file": "assets/Dashboard-D0EUYvaM.js",
-    "name": "Dashboard",
-    "src": "src/pages/Dashboard.jsx",
-    "isDynamicEntry": true,
-    "imports": [
-      "index.html",
-      "_Footer-DGS2moRA.js"
-    ]
-  },
-  "src/pages/History.jsx": {
-    "file": "assets/History-7jRkin71.js",
-    "name": "History",
-    "src": "src/pages/History.jsx",
-    "isDynamicEntry": true,
-    "imports": [
-      "index.html",
-      "_Footer-DGS2moRA.js"
-    ]
-  },
-  "src/pages/Login.jsx": {
-    "file": "assets/Login-CPjOj8Dj.js",
-    "name": "Login",
-    "src": "src/pages/Login.jsx",
+  "src/components/AuthLayout.jsx": {
+    "file": "assets/AuthLayout-ABWnYI_E.js",
+    "name": "AuthLayout",
+    "src": "src/components/AuthLayout.jsx",
     "isDynamicEntry": true,
     "imports": [
       "index.html"
     ]
   },
+  "src/pages/Dashboard.jsx": {
+    "file": "assets/Dashboard-CUnhOBh1.js",
+    "name": "Dashboard",
+    "src": "src/pages/Dashboard.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html"
+    ],
+    "css": [
+      "assets/Dashboard-17dVal5W.css"
+    ]
+  },
+  "src/pages/History.jsx": {
+    "file": "assets/History-Cijw4INp.js",
+    "name": "History",
+    "src": "src/pages/History.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html"
+    ],
+    "css": [
+      "assets/History-sW0c7zaA.css"
+    ]
+  },
+  "src/pages/Login.jsx": {
+    "file": "assets/Login-g8o3pa5h.js",
+    "name": "Login",
+    "src": "src/pages/Login.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html"
+    ],
+    "css": [
+      "assets/Login-qBxnUJoq.css"
+    ]
+  },
   "src/pages/NotFound.jsx": {
-    "file": "assets/NotFound-BLeK7asE.js",
+    "file": "assets/NotFound-CTrEHG8r.js",
     "name": "NotFound",
     "src": "src/pages/NotFound.jsx",
     "isDynamicEntry": true,
@@ -75,27 +85,31 @@
     ]
   },
   "src/pages/Settings.jsx": {
-    "file": "assets/Settings-DMBBRRei.js",
+    "file": "assets/Settings-CebsrX7G.js",
     "name": "Settings",
     "src": "src/pages/Settings.jsx",
     "isDynamicEntry": true,
     "imports": [
-      "index.html",
-      "_Footer-DGS2moRA.js"
+      "index.html"
+    ],
+    "css": [
+      "assets/Settings-C0m9miIT.css"
     ]
   },
   "src/pages/Statistic.jsx": {
-    "file": "assets/Statistic-D0Uy9sls.js",
+    "file": "assets/Statistic-HutrylU7.js",
     "name": "Statistic",
     "src": "src/pages/Statistic.jsx",
     "isDynamicEntry": true,
     "imports": [
-      "index.html",
-      "_Footer-DGS2moRA.js"
+      "index.html"
+    ],
+    "css": [
+      "assets/Statistic-_nlcvaOd.css"
     ]
   },
   "src/pages/TooManyAttempts.jsx": {
-    "file": "assets/TooManyAttempts-6r-WVvGD.js",
+    "file": "assets/TooManyAttempts-C7bnrvNy.js",
     "name": "TooManyAttempts",
     "src": "src/pages/TooManyAttempts.jsx",
     "isDynamicEntry": true,

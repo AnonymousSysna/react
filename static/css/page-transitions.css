@@ -1,13 +1,15 @@
+/* Lightweight, production-safe motion system */
 
-/* Main container that wraps all page content */
 .page-container {
     position: relative;
     min-height: 100vh;
+    min-height: 100dvh;
 }
 
 .route-scene {
     position: relative;
     min-height: 100vh;
+    min-height: 100dvh;
     padding: 0;
 }
 
@@ -15,202 +17,81 @@
     position: relative;
     z-index: 2;
     min-height: 100vh;
-}
-
-.route-fx-layer {
-    position: fixed;
-    inset: 0;
-    z-index: 1200;
-    pointer-events: none;
-    overflow: hidden;
-}
-
-.route-fx-backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(148, 163, 184, 0.12);
-    animation: route-fx-fade 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-.route-fx-beam {
-    position: absolute;
-    left: -20%;
-    top: 0;
-    width: 35%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.24), transparent);
-    transform: skewX(-14deg);
-    animation: route-fx-beam 480ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-.auth-pane {
-    will-change: transform, opacity;
-}
-
-/* Card pop-up transition: rises from backbone (bottom) into final position */
-.route-scene-content .card,
-.route-scene-content .login-card {
-    opacity: 0;
-    transform: translateY(26px) scale(0.985);
-    transform-origin: 50% 100%;
-    animation: route-card-pop 0.52s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    will-change: transform, opacity;
-}
-
-.route-scene-content .card:nth-of-type(1),
-.route-scene-content .login-card:nth-of-type(1) {
-    animation-delay: 0.04s;
-}
-
-.route-scene-content .card:nth-of-type(2),
-.route-scene-content .login-card:nth-of-type(2) {
-    animation-delay: 0.09s;
-}
-
-.route-scene-content .card:nth-of-type(3),
-.route-scene-content .login-card:nth-of-type(3) {
-    animation-delay: 0.14s;
-}
-
-.route-scene-content .card:nth-of-type(4),
-.route-scene-content .login-card:nth-of-type(4) {
-    animation-delay: 0.18s;
+    min-height: 100dvh;
 }
 
 .route-scene-backbone {
     display: none;
 }
 
-.route-scene-backbone::after {
-    content: none;
+.auth-shell {
+    position: relative;
+    display: block;
 }
 
-@keyframes route-backbone-scan {
+.auth-pane {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(8px);
+    height: 0;
+    overflow: hidden;
+    transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
+}
+
+.auth-pane.is-active {
+    position: relative;
+    inset: auto;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    height: auto;
+    overflow: visible;
+}
+
+.route-scene-content .card,
+.route-scene-content .login-card {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: route-card-in 220ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.route-scene-content .card:nth-of-type(2),
+.route-scene-content .login-card:nth-of-type(2) {
+    animation-delay: 30ms;
+}
+
+.route-scene-content .card:nth-of-type(3),
+.route-scene-content .login-card:nth-of-type(3) {
+    animation-delay: 60ms;
+}
+
+@keyframes route-card-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
     to {
-        transform: translateX(120%);
-    }
-}
-
-@keyframes route-fx-fade {
-    0% {
-        opacity: 0;
-    }
-    25% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
-@keyframes route-fx-beam {
-    0% {
-        transform: translateX(-25%) skewX(-14deg);
-        opacity: 0;
-    }
-    25% {
-        opacity: 1;
-    }
-    100% {
-        transform: translateX(380%) skewX(-14deg);
-        opacity: 0;
-    }
-}
-
-@keyframes auth-pane-pop {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    100% {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-@keyframes route-card-pop {
-    0% {
-        opacity: 0;
-        transform: translateY(26px) scale(0.985);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-@media (max-width: 768px) {
-    .route-scene {
-        padding: 0;
-    }
-
-    .route-scene-content .card,
-    .route-scene-content .login-card {
-        transform: translateY(18px) scale(0.99);
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .route-fx-backdrop,
-    .route-fx-beam {
-        animation: none;
-        opacity: 0;
-    }
-
-    .auth-pane {
-        animation: none !important;
-    }
-
-    .route-scene-backbone::after {
-        animation: none;
-    }
-
-    .route-scene-content .card,
-    .route-scene-content .login-card {
-        animation: none;
-        opacity: 1;
-        transform: none;
-    }
-}
-
-/* Page transition animations */
-.page-enter {
-    opacity: 0;
-    transform: translateY(20px);
-}
-
-.page-enter-active {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
-}
-
-.page-exit {
-    opacity: 1;
-}
-
-.page-exit-active {
-    opacity: 0;
-    transform: translateY(-20px);
-    transition: opacity 0.3s ease-in, transform 0.3s ease-in;
-}
-
-/* Optional loading overlay */
 .page-loading-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(15, 23, 42, 0.7);
-    backdrop-filter: blur(5px);
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.42);
+    backdrop-filter: blur(4px);
     z-index: 9999;
     display: flex;
     justify-content: center;
     align-items: center;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
+    transition: opacity 0.18s ease, visibility 0.18s ease;
 }
 
 .page-loading-overlay.active {
@@ -219,8 +100,8 @@
 }
 
 .page-loading-spinner {
-    width: 50px;
-    height: 50px;
+    width: 42px;
+    height: 42px;
     border: 3px solid var(--border-color);
     border-top-color: var(--accent-color);
     border-radius: 50%;
@@ -233,71 +114,23 @@
     }
 }
 
-/* Enhance link hover animations */
-a:not(.btn):not(.navbar-brand):not(.nav-link) {
-    position: relative;
-    transition: color 0.3s ease;
-}
-
-a:not(.btn):not(.navbar-brand):not(.nav-link)::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background-color: var(--accent-color);
-    transition: width 0.3s ease;
-}
-
-a:not(.btn):not(.navbar-brand):not(.nav-link):hover::after {
-    width: 100%;
-}
-
-/* Additional smooth transitions for UI elements */
-button, 
-.form-control, 
-.form-select, 
-.input-group-text, 
-.nav-link, 
+/* Keep transitions targeted; avoid costly transition: all */
+.btn,
+.form-control,
+.form-select,
+.input-group-text,
+.nav-link,
 .dropdown-item {
-    transition: all 0.3s ease;
+    transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+    transition-duration: 160ms;
+    transition-timing-function: ease;
 }
 
-/* Smooth transition for menu items */
-.navbar-nav .nav-link {
-    position: relative;
-    transition: color 0.3s ease, background-color 0.3s ease;
-    overflow: hidden;
-}
-
-.navbar-nav .nav-link::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background-color: var(--accent-color);
-    transition: width 0.3s ease, left 0.3s ease;
-}
-
-.navbar-nav .nav-link:hover::before {
-    width: 100%;
-    left: 0;
-}
-
-.navbar-nav .nav-link.active::before {
-    width: 100%;
-    left: 0;
-}
-
-/* Enhance dropdown animation */
 .dropdown-menu {
-    margin-top: 10px;
+    margin-top: 8px;
     opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.3s, transform 0.3s;
+    transform: translateY(-6px);
+    transition: opacity 160ms ease, transform 160ms ease;
     display: block;
     visibility: hidden;
 }
@@ -308,25 +141,18 @@ button,
     visibility: visible;
 }
 
-/* Enhance button transitions */
-.btn {
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-}
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 
-.btn::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: all 0.6s;
-    z-index: -1;
-}
-
-.btn:hover::after {
-    left: 100%;
+    .route-scene-content .card,
+    .route-scene-content .login-card {
+        opacity: 1;
+        transform: none;
+        animation: none;
+    }
 }
